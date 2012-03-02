@@ -14,17 +14,20 @@ self.addEventListener('message', function(e) {
 var abs = Math.abs, acos = Math.acos, asin = Math.asin, atan = Math.atan, atan2 = Math.atan2, ceil = Math.ceil, cos = Math.cos, exp = Math.exp, floor = Math.floor, log = Math.log, max = Math.max, min = Math.min, pow = Math.pow, random = Math.random, round = Math.round, sin = Math.sin, sqrt = Math.sqrt, tan = Math.tan, E = Math.E, PI = Math.PI;
 
 function startThisWorker(e) { 
-   currenttime = 0;
    eval("function redFunc(x,y,t) { return " + e.data.redstring + ";}");
    eval("function greenFunc(x,y,t) { return " + e.data.greenstring + ";}");
    eval("function blueFunc(x,y,t) { return " + e.data.bluestring + ";}");
 
-   drawPicture(e.data.imageData, e.data.width, e.data.height, redFunc, greenFunc, blueFunc, currenttime);
+   drawPicture(e.data.imageData, e.data.width, e.data.height, redFunc, greenFunc, blueFunc, 0);
    if(e.data.tstate){
+      var startTime = (new Date()).getTime();
+
       setInterval( function() {
-         drawPicture(e.data.imageData, e.data.width, e.data.height, redFunc, greenFunc, blueFunc, currenttime); 
-         currenttime += 1;
-      }, e.data.tinterval);
+         var currentTime = (new Date()).getTime();
+         var t = (currentTime - startTime) / 1000.0;
+
+         drawPicture(e.data.imageData, e.data.width, e.data.height, redFunc, greenFunc, blueFunc, t); 
+      }, 0);
    }
 }
 

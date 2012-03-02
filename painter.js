@@ -12,17 +12,14 @@ function draw() {
    bluestring = document.getElementById('blueFunction').value;
 
    tstate = document.getElementById('tVariable').checked;
-   tinterval = parseInt(document.getElementById('tInterval').value);
    
-   adjust = document.getElementById('adjust').checked;
+   //adjust = document.getElementById('adjust').checked;
    
    imageData = context.createImageData(width, height);
 
    //Start worker for drawing data from function
-   startDrawWorker(imageData, width, height, redstring, greenstring, bluestring, tinterval, tstate);
-   
+   startDrawWorker(imageData, width, height, redstring, greenstring, bluestring, tstate);
 
-   
    //Add stop button if time variable is included
    if (tstate) {
       document.getElementById('stop').disabled=false;
@@ -37,7 +34,7 @@ function stopDraw() {
    document.getElementById('start').disabled=false;
 }
 
-function startDrawWorker(imageData, width, height, redstring, greenstring, bluestring, tinterval, tstate) {
+function startDrawWorker(imageData, width, height, redstring, greenstring, bluestring, tstate) {
    //Create Worker
    drawWorker = new Worker('paintWorker.js');
 
@@ -45,15 +42,16 @@ function startDrawWorker(imageData, width, height, redstring, greenstring, blues
    drawWorker.addEventListener('message', function(e) {handleMessage(e.data)});
 
    //Post initial Message to Worker
-   drawWorker.postMessage({'command': 'start',
-                       'imageData': imageData,
-                       'width': width,
-                       'height': height,
-                       'redstring': redstring,
-                       'greenstring': greenstring,
-                       'bluestring': bluestring,
-                       'tstate': tstate,
-                       'tinterval': tinterval});
+   drawWorker.postMessage({
+      'command': 'start',
+      'imageData': imageData,
+      'width': width,
+      'height': height,
+      'redstring': redstring,
+      'greenstring': greenstring,
+      'bluestring': bluestring,
+      'tstate': tstate,
+   });
 
    return drawWorker;
 }
